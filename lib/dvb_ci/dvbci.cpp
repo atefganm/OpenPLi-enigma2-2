@@ -788,11 +788,7 @@ void eDVBCIInterfaces::removePMTHandler(eDVBServicePMTHandler *pmthandler)
 					{
 						case finish_use_tuner_a:
 						{
-#ifdef DREAMBOX_DUAL_TUNER
-							finish_source = getTunerLetterDM(0);
-#else  
 							finish_source = "A";
-#endif
 							break;
 						}
 
@@ -815,11 +811,7 @@ void eDVBCIInterfaces::removePMTHandler(eDVBServicePMTHandler *pmthandler)
 					if(finish_source == "")
 					{
 						eDebug("[CI] warning: CI streaming finish mode not set, assuming \"tuner A\"");
-#ifdef DREAMBOX_DUAL_TUNER
-						finish_source = getTunerLetterDM(0);
-#else
 						finish_source = "A";
-#endif  
 					}
 
 					slot->setSource(finish_source);
@@ -1223,11 +1215,7 @@ void eDVBCIInterfaces::setCIPlusRouting(int slotid)
 		new_input_source << "CI" << slot->getSlotID();
 
 		setInputSource(tunernum, new_input_source.str());
-#ifdef DREAMBOX_DUAL_TUNER
-		slot->setSource(getTunerLetterDM(tunernum));
-#else
 		slot->setSource(eDVBCISlot::getTunerLetter(tunernum));
-#endif
 
 		slot->setCIPlusRoutingParameter(tunernum, ciplus_routing_input, ciplus_routing_ci_input);
 		eDebug("[CI] CIRouting active slotid=%d tuner=%d old_input=%s old_ci_input=%s", slotid, tunernum, ciplus_routing_input.c_str(), ciplus_routing_ci_input.c_str());
