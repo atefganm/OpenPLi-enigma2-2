@@ -39,6 +39,7 @@ fonts = {  # Dictionary of predefined and skin defined font aliases.
 menus = {}  # Dictionary of images associated with menu entries.
 menuicons = {}  # Dictionary of icons associated with menu items.
 parameters = {}  # Dictionary of skin parameters used to modify code behavior.
+screens = {}  # Dictionary of images associated with screen entries.
 setups = {}  # Dictionary of images associated with setup menus.
 switchPixmap = {}  # Dictionary of switch images.
 windowStyles = {}  # Dictionary of window styles for each screen ID.
@@ -196,6 +197,7 @@ def reloadSkins():
 	menus.clear()
 	menuicons.clear()
 	parameters.clear()
+	screens.clear()
 	setups.clear()
 	switchPixmap.clear()
 	InitSkins()
@@ -415,7 +417,7 @@ def loadPixmap(path, desktop, width=0, height=0):
 	option = path.find("#")
 	if option != -1:
 		path = path[:option]
-	if basename(path) in ("rc.png", "rc0.png", "rc1.png", "rc2.png", "oldrc.png"):
+	if not rc_model.rcIsDefault() and basename(path) in ("rc.png", "rc0.png", "rc1.png", "rc2.png", "oldrc.png"):
 		path = rc_model.getRcImg()
 	pixmap = LoadPixmap(path, desktop, None, width, height)
 	if pixmap is None:
@@ -673,7 +675,7 @@ class AttributeParser:
 
 	def borderWidth(self, value):
 		self.guiObject.setBorderWidth(parseScale(value))
-
+		
 	def cornerRadius(self, value):
 		radius, edgeValue = parseRadius(value)
 		self.guiObject.setCornerRadius(radius, edgeValue)
@@ -752,7 +754,7 @@ def reloadWindowStyles():
 def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_CURRENT_SKIN):
 	"""Loads skin data like colors, windowstyle etc."""
 	assert domSkin.tag == "skin", "root element in skin must be 'skin'!"
-	global colors, fonts, menus, parameters, setups, switchPixmap
+	global colors, fonts, menus, parameters, screens, setups, switchPixmap
 	for tag in domSkin.findall("output"):
 		scrnID = int(tag.attrib.get("id", GUI_SKIN_ID))
 		if scrnID == GUI_SKIN_ID:
@@ -812,10 +814,10 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_CURRENT
 				parameters["PartnerBoxE2TimerIconRepeat"] = applySkinFactor(510, 30, 20, 20)
 				parameters["PartnerBoxE2TimerState"] = applySkinFactor(150, 50, 150, 20)
 				parameters["PartnerBoxE2TimerTime"] = applySkinFactor(0, 50, 150, 20)
-				parameters["PartnerBoxEntryListName"] = applySkinFactor(5, 0, 150, 20)
-				parameters["PartnerBoxEntryListIP"] = applySkinFactor(120, 0, 150, 20)
-				parameters["PartnerBoxEntryListPort"] = applySkinFactor(270, 0, 100, 20)
-				parameters["PartnerBoxEntryListType"] = applySkinFactor(410, 0, 100, 20)
+				parameters["PartnerBoxEntryListName"] = applySkinFactor(5, 0, 150, 25)
+				parameters["PartnerBoxEntryListIP"] = applySkinFactor(120, 0, 150, 25)
+				parameters["PartnerBoxEntryListPort"] = applySkinFactor(270, 0, 100, 25)
+				parameters["PartnerBoxEntryListType"] = applySkinFactor(410, 0, 100, 25)
 				parameters["PartnerBoxTimerName"] = applySkinFactor(0, 30, 20)
 				parameters["PartnerBoxTimerServicename"] = applySkinFactor(0, 0, 30)
 				parameters["SHOUTcastListItem"] = applySkinFactor(20, 18, 22, 69, 20, 23, 43, 22)
@@ -911,6 +913,15 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_CURRENT
 				# print("[Skin] DEBUG: Menu key='%s', image='%s'." % (key, image))
 			else:
 				raise SkinError("Tag 'menuicon' needs key and image, got key='%s' and image='%s'" % (key, image))
+	for tag in domSkin.findall("screens"):
+		for screen in tag.findall("screen"):
+			key = screen.attrib.get("key")
+			image = screen.attrib.get("image")
+			if key and image:
+				screens[key] = image
+				# print("[Skin] DEBUG: Screen key='%s', image='%s'." % (key, image))
+			else:
+				raise SkinError("Tag 'screen' needs key and image, got key='%s' and image='%s'" % (key, image))
 	for tag in domSkin.findall("setups"):
 		for setup in tag.findall("setup"):
 			key = setup.attrib.get("key")
