@@ -136,7 +136,6 @@ def InitUsageConfig():
 	config.usage.timeshift_path = ConfigText(default="/media/hdd/")
 	config.usage.allowed_timeshift_paths = ConfigLocations(default=["/media/hdd/"])
 	config.usage.timeshift_skipreturntolive = ConfigYesNo(default=False)
-
 	config.usage.movielist_trashcan = ConfigYesNo(default=True)
 	config.usage.movielist_trashcan_days = ConfigNumber(default=8)
 	config.usage.movielist_trashcan_reserve = ConfigNumber(default=40)
@@ -443,6 +442,12 @@ def InitUsageConfig():
 	config.usage.multiboot_order = ConfigYesNo(default=True)
 
 	config.osd.alpha_teletext = ConfigSelectionNumber(default=255, stepwidth=1, min=0, max=255, wraparound=False)
+
+	config.usage.setupShowDefault = ConfigSelection(default="spaces", choices=[
+		("", _("Don't show default")),
+		("spaces", _("Show default after description")),
+		("newline", _("Show default on new line"))
+	])
 
 	config.epg = ConfigSubsection()
 	config.epg.eit = ConfigYesNo(default=True)

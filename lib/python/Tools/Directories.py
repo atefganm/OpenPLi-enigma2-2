@@ -12,7 +12,7 @@ from stat import S_IMODE
 from sys import _getframe as getframe
 from unicodedata import normalize
 from traceback import print_exc
-from xml.etree.cElementTree import ParseError, fromstring, parse
+from xml.etree.cElementTree import Element, ParseError, fromstring, parse
 
 DEFAULT_MODULE_NAME = __name__.split(".")[-1]
 
@@ -434,10 +434,10 @@ def fileWriteLines(filename, lines, source=DEFAULT_MODULE_NAME, debug=False):
 	return result
 
 
-def fileReadXML(filename, default=None, source=DEFAULT_MODULE_NAME, debug=False):
+def fileReadXML(filename, default=None, source=DEFAULT_MODULE_NAME, debug=False, *args, **kwargs):
 	dom = None
 	try:
-		with open(filename, "r") as fd:  # This open gets around a possible file handle leak in Python's XML parser.
+		with open(filename, "r", encoding="utf-8") as fd:  # This open gets around a possible file handle leak in Python's XML parser.
 			try:
 				dom = parse(fd).getroot()
 				msg = "Read"
