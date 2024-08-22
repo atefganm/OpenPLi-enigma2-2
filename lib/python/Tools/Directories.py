@@ -5,6 +5,7 @@ import os
 from os import F_OK, R_OK, W_OK, access, chmod, listdir, makedirs, mkdir, readlink, rename, rmdir, sep, stat, statvfs, symlink, utime, walk
 from os.path import isdir, isfile, join as pathjoin
 from enigma import eEnv, getDesktop, eGetEnigmaDebugLvl
+from datetime import datetime
 from errno import ENOENT, EXDEV
 from re import compile, split
 from six import PY2
@@ -366,6 +367,12 @@ def fileHas(f, content, mode="r"):
 		if content in text:
 			result = True
 	return result
+
+
+def fileDate(f):
+	if fileExists(f):
+		return datetime.fromtimestamp(os.stat(f).st_mtime).strftime("%Y-%m-%d")
+	return("1970-01-01")
 
 
 def fileReadLine(filename, default=None, source=DEFAULT_MODULE_NAME, debug=False):
