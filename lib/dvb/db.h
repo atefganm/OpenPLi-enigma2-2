@@ -191,7 +191,7 @@ public:
 	void readLcnDBFile();
 #endif
 	void setNumberingMode(bool numberingMode);
-	void setLoadUnlinkedUserbouquets(bool value) { m_load_unlinked_userbouquets=value; }
+	void setLoadUnlinkedUserbouquets(int value) { m_load_unlinked_userbouquets=value; }
 	void renumberBouquet();
 	void loadServicelist(const char *filename);
 	static eDVBDB *getInstance() { return instance; }
